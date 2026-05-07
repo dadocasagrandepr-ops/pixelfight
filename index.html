@@ -2,162 +2,265 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
   <title>PixelFight</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-  margin: 0;
-  background: #070707;
-  color: white;
-  font-family: Arial, sans-serif;
-  overflow: hidden;
-}
+      margin: 0;
+      background: #070707;
+      color: white;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
 
-header {
-  height: 56px;
-  padding: 0 14px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #111;
-  border-bottom: 1px solid #222;
-}
+    header {
+      height: 56px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #111;
+      border-bottom: 1px solid #222;
+    }
 
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-}
+    .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
 
-.logo span {
-  color: #22c55e;
-}
+    .logo span {
+      color: #22c55e;
+    }
 
-.stats {
-  font-size: 12px;
-  color: #ccc;
-}
+    .stats {
+      font-size: 12px;
+      color: #ccc;
+    }
 
-main {
-  height: calc(100vh - 56px);
-  display: block;
-}
+    main {
+      height: calc(100vh - 56px);
+      display: block;
+    }
 
-.canvas-area {
-  height: calc(100vh - 56px - 82px);
-  overflow: auto;
-  background: radial-gradient(circle at center, #181818, #050505);
-  touch-action: pan-x pan-y;
-}
+    .canvas-area {
+      height: calc(100vh - 56px - 82px);
+      overflow: auto;
+      background:
+        radial-gradient(circle at center, #181818, #050505);
 
-canvas {
-  image-rendering: pixelated;
-  cursor: crosshair;
-  margin: 12px;
-  border: 1px solid #333;
-  background: #111;
-}
+      touch-action: pan-x pan-y;
+    }
 
-aside {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 82px;
-  background: #101010;
-  border-top: 1px solid #222;
-  border-left: none;
-  padding: 10px;
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  z-index: 5;
-}
+    canvas {
+      image-rendering: pixelated;
+      cursor: crosshair;
+      margin: 12px;
+      border: 1px solid #333;
+      background: #111;
+    }
 
-.card {
-  min-width: 150px;
-  background: #181818;
-  border: 1px solid #292929;
-  border-radius: 12px;
-  padding: 10px;
-  margin: 0;
-  font-size: 12px;
-}
+    aside {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 82px;
+      background: #101010;
+      border-top: 1px solid #222;
+      padding: 10px;
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      z-index: 5;
+    }
 
-.card h3 {
-  margin: 0 0 4px;
-  font-size: 13px;
-}
+    .card {
+      min-width: 150px;
+      background: #181818;
+      border: 1px solid #292929;
+      border-radius: 12px;
+      padding: 10px;
+      margin: 0;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
 
-.card p {
-  margin: 2px 0;
-}
+    .card h3 {
+      margin: 0 0 4px;
+      font-size: 13px;
+    }
 
-.btn {
-  width: 100%;
-  padding: 9px;
-  border: none;
-  border-radius: 10px;
-  background: #22c55e;
-  color: #061006;
-  font-weight: bold;
-}
+    .card p {
+      margin: 2px 0;
+    }
 
-.modal-content {
-  width: calc(100vw - 40px);
-  max-width: 320px;
-}
+    .btn {
+      width: 100%;
+      padding: 9px;
+      border: none;
+      border-radius: 10px;
+      background: #22c55e;
+      color: #061006;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.75);
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .modal-content {
+      width: calc(100vw - 40px);
+      max-width: 320px;
+      background: #181818;
+      border: 1px solid #333;
+      padding: 22px;
+      border-radius: 16px;
+      text-align: center;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+    }
+
+    input[type="color"] {
+      width: 100%;
+      height: 60px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .modal-buttons button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .cancel {
+      background: #333;
+      color: white;
+    }
+
+    .confirm {
+      background: #22c55e;
+      color: black;
+    }
+
+    .zoom-controls {
+      position: fixed;
+      right: 12px;
+      bottom: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    .zoom-btn {
+      width: 46px;
+      height: 46px;
+      border: none;
+      border-radius: 12px;
+      background: #181818;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      border: 1px solid #333;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">Pixel<span>Fight</span></div>
+  <div class="logo">
+    Pixel<span>Fight</span>
+  </div>
 
   <div class="stats">
-    <div>🟢 Online: <b id="online">1</b></div>
-    <div>🎨 Pixels pintados: <b id="painted">0</b></div>
-    <div>⏱ Cooldown: <b id="cooldown">Pronto</b></div>
+    🎨 <b id="painted">0</b> pixels
   </div>
 </header>
 
 <main>
-  <section class="canvas-area">
+
+  <section class="canvas-area" id="canvasArea">
     <canvas id="canvas"></canvas>
   </section>
 
   <aside>
+
     <div class="card">
-      <h3>Como funciona</h3>
-      <p>Clique em um pixel, escolha uma cor e pinte o mural.</p>
-      <p>Depois alguém pode atacar seu desenho.</p>
+      <h3>Cooldown</h3>
+      <p><b id="cooldown">Pronto</b></p>
     </div>
 
     <div class="card">
-      <h3>Ranking</h3>
-      <p>1. Você — <span id="meusPixels">0</span> pixels</p>
-      <p>2. Anônimo — 0 pixels</p>
-      <p>3. Anônimo — 0 pixels</p>
+      <h3>Seus pixels</h3>
+      <p><b id="meusPixels">0</b></p>
     </div>
 
     <div class="card">
-      <h3>Comprar tinta</h3>
-      <button class="btn">Comprar pixels</button>
+      <h3>Modo caos</h3>
+      <p>Todos podem destruir tudo.</p>
     </div>
+
+    <div class="card">
+      <h3>Premium</h3>
+      <button class="btn">
+        Comprar tinta
+      </button>
+    </div>
+
   </aside>
+
 </main>
+
+<div class="zoom-controls">
+  <button class="zoom-btn" onclick="zoomIn()">+</button>
+  <button class="zoom-btn" onclick="zoomOut()">−</button>
+</div>
 
 <div class="modal" id="modal">
   <div class="modal-content">
-    <h2>Escolha sua cor</h2>
+
+    <h2>Pintar pixel</h2>
+
     <p id="pixelInfo"></p>
 
     <input type="color" id="colorPicker" value="#ff0000">
 
     <div class="modal-buttons">
-      <button class="cancel" onclick="fecharModal()">Cancelar</button>
-      <button class="confirm" onclick="confirmarCor()">Pintar</button>
+      <button class="cancel" onclick="fecharModal()">
+        Cancelar
+      </button>
+
+      <button class="confirm" onclick="confirmarCor()">
+        Pintar
+      </button>
     </div>
+
   </div>
 </div>
 
@@ -173,56 +276,90 @@ aside {
   const meusPixelsEl = document.getElementById("meusPixels");
   const cooldownEl = document.getElementById("cooldown");
 
-  const cols = 1000;
-  const rows = 1000;
-  const size = 6;
+  const cols = 300;
+  const rows = 300;
+
+  let pixelSize = 12;
 
   let quadradoSelecionado = null;
+
   let pixelsPintados = 0;
   let meusPixels = 0;
-  let podePintar = true;
 
-  canvas.width = cols * size;
-  canvas.height = rows * size;
+  let podePintar = true;
 
   const pixels = new Map();
 
+  function atualizarCanvasSize() {
+    canvas.width = cols * pixelSize;
+    canvas.height = rows * pixelSize;
+
+    desenharTudo();
+  }
+
   function desenharPixel(x, y, cor = "#1f2937") {
     ctx.fillStyle = cor;
-    ctx.fillRect(x * size, y * size, size - 1, size - 1);
+
+    ctx.fillRect(
+      x * pixelSize,
+      y * pixelSize,
+      pixelSize - 1,
+      pixelSize - 1
+    );
   }
 
   function desenharTudo() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     for (let y = 0; y < rows; y++) {
+
       for (let x = 0; x < cols; x++) {
-        desenharPixel(x, y);
+
+        const key = `${x},${y}`;
+
+        desenharPixel(
+          x,
+          y,
+          pixels.get(key) || "#1f2937"
+        );
       }
     }
   }
 
-  desenharTudo();
+  atualizarCanvasSize();
 
   canvas.addEventListener("click", (event) => {
+
     if (!podePintar) {
-      alert("Aguarde o cooldown acabar.");
+      alert("Aguarde o cooldown.");
       return;
     }
 
     const rect = canvas.getBoundingClientRect();
-    const x = Math.floor((event.clientX - rect.left) / size);
-    const y = Math.floor((event.clientY - rect.top) / size);
+
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    const x = Math.floor(mouseX / pixelSize);
+    const y = Math.floor(mouseY / pixelSize);
 
     quadradoSelecionado = { x, y };
-    pixelInfo.innerText = `Pixel selecionado: X ${x}, Y ${y}`;
+
+    pixelInfo.innerText =
+      `Pixel X ${x} • Y ${y}`;
 
     modal.style.display = "flex";
   });
 
   function confirmarCor() {
+
     if (!quadradoSelecionado) return;
 
     const { x, y } = quadradoSelecionado;
+
     const cor = colorPicker.value;
+
     const key = `${x},${y}`;
 
     if (!pixels.has(key)) {
@@ -231,13 +368,15 @@ aside {
     }
 
     pixels.set(key, cor);
+
     desenharPixel(x, y, cor);
 
     paintedEl.innerText = pixelsPintados;
     meusPixelsEl.innerText = meusPixels;
 
     fecharModal();
-    iniciarCooldown(10);
+
+    iniciarCooldown(5);
   }
 
   function fecharModal() {
@@ -246,21 +385,49 @@ aside {
   }
 
   function iniciarCooldown(segundos) {
+
     podePintar = false;
+
     let restante = segundos;
 
     cooldownEl.innerText = `${restante}s`;
 
     const timer = setInterval(() => {
+
       restante--;
+
       cooldownEl.innerText = `${restante}s`;
 
       if (restante <= 0) {
+
         clearInterval(timer);
+
         podePintar = true;
+
         cooldownEl.innerText = "Pronto";
       }
+
     }, 1000);
+  }
+
+  function zoomIn() {
+
+    pixelSize += 2;
+
+    if (pixelSize > 40)
+      pixelSize = 40;
+
+    atualizarCanvasSize();
+  }
+
+  function zoomOut() {
+
+    pixelSize -= 2;
+
+    if (pixelSize < 2)
+      pixelSize = 2;
+
+    atualizarCanvasSize();
   }
 </script>
 
